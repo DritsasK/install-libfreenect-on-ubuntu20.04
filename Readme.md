@@ -1,19 +1,19 @@
 Last week i got myself the Kinect v1 camera (a used one), and i wanted to connect it to my computer and play a bit. My system was an Ubuntu 20. I installed libfreenect library (with Python 2 wrapper), which is actually a driver for the Microsoft Kinect. It runs on Linux, OSX and Windows. I wanted to share with you how i managed to install the libfreenect library. Below are the steps i followed. I have already installed python 2.7.18 on my system.
 
 1. Update The System
---------------------
+
 sudo apt update && sudo apt upgrade -y
 
 2. Install Dependencies
------------------------
+
 sudo apt install build-essential libusb-1.0-0-dev freeglut3-dev libxmu-dev libxi-dev
 
 3. Install cython
------------------
+
 sudo apt-get install cython3 cython3-dev
 
 4. Install cmake version 3.12.4 (i build from source, because i saw in CMakeLists.txt located in libfreenect/wrappers/python the cmake minimum required version is 3.12.4 most likely the version from the Ubuntu repo works fine as well)
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 sudo apt install -y build-essential libssl-dev
 wget https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4.tar.gz
 tar -xvzf cmake-3.12.4.tar.gz
@@ -23,7 +23,7 @@ make -j$(nproc)
 sudo make install
 
 5. Clone the libfreenect Repository (github) and build
-------------------------------------------------------
+
 git clone https://github.com/OpenKinect/libfreenect.git
 cd libfreenect
 mkdir build
@@ -34,7 +34,7 @@ sudo make install
 sudo ldconfig
 
 6. Install Python 2 Wrapper
----------------------------
+
 cd ../wrappers/python
 sudo python2 setup.py install
 
@@ -52,8 +52,7 @@ cythoning freenect.pyx to freenect.c
   tree = Parsing.p_module(s, pxd, full_module_name)
 
 Error compiling Cython file:
-------------------------------------------------------------
-...
+
     dev_out.ctx = ctx
     return dev_out
 
@@ -61,7 +60,6 @@ _depth_cb, _video_cb = None, None
 
 cdef void depth_cb(freenect_device *dev, void *data, uint32_t timestamp) noexcept with gil:
                                                                         ^
-------------------------------------------------------------
 
 freenect.pyx:324:73: Syntax error in C variable declaration
 building 'freenect' extension
@@ -75,7 +73,7 @@ The solution i found myself was to erase all keywords 'noexcept' from file libfr
 And its done ! Meaby there was another solution(s) in Ubuntu forums, but i did not search it a lot, i was happy that worked for me (i installed afterwards libfreenect with python wrappers using python3 and i did not get the error above).
 
 7. Verify installation
-----------------------
+
 python [enter]
 import freenect
 
